@@ -9,7 +9,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173","http://127.0.0.1:5173"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,6 +34,6 @@ async def get_recommendations(keyword: str, top_n: int = 5):
     except Exception as e:
         return {"message": f"An error occurred during recommendation generation: {str(e)}"}
 
-if _name_ == "_main_":
+if name == "main":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
