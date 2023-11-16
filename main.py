@@ -3,23 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from recommendation_module import create_similarity_matrix, search_courses, recommend_courses
 from data_loader import load_dataframe
 
-app = FastAPI()
 
-# Enable CORS (Cross-Origin Resource Sharing)
-origins = [
-    "http://workshala-in.vercel.app"
-    "http://localhost:5173",
-]
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Load DataFrame and create a similarity matrix
 df = load_dataframe()
