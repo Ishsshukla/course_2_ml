@@ -34,6 +34,6 @@ async def get_recommendations(keyword: str, top_n: int = 5):
     except Exception as e:
         return {"message": f"An error occurred during recommendation generation: {str(e)}"}
 
-if name == "main":
+if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
