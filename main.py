@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import pandas as pd
 
 app = FastAPI()
 
@@ -9,17 +10,27 @@ app = FastAPI()
 origins = ["http://127.0.0.1:8000/", "http://localhost:5173", "https://courseapi-s0hm.onrender.com/", "http://localhost:5000"]
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
-# Load your DataFrame and create similarity matrix
-# (Note: I'm assuming you have the necessary functions in the recommendation_module and data_loader modules.)
-from recommendation_module import create_similarity_matrix
-from data_loader import load_dataframe
+df = pd.read_csv("all_courses.csv")
+df = df.drop_duplicates()
+df['Level'].fillna(df['Level'].mode()[0], inplace=True)
+df['Skills Covered'].fillna(df['Skills Covered'].mode()[0], inplace=True)
+df = df[['Title', 'Level', 'Description', 'Skills Covered']]
+df['tags'] = df['Description'] + ' ' + df['Title'] + ' ' + df['Skills Covered']
+df['tags'] = df['tags'].str.lower()
+df.dropna(subset=['Title'], inplace=True)
+df['Level'].fillna('Unknown', inplace=True)
+df['tags'] = df['tags'].str.replace('[^\w\s]', " ")
 
-df = load_dataframe()
-similarity_matrix = create_similarity_matrix(df)
+new_df = df[['Title', 'tags']]
+new_df['tags'].fillna(' ', inplace=True)
 
-# Count Vectorizer for course tags
+text_data = new_df['tags']
+
+# Count Vectorizer
 vectorizer = CountVectorizer()
-matrix = vectorizer.fit_transform(df['tags'].fillna(''))
+matrix = vectorizer.fit_transform(text_data)
+cosine_sim = cosine_similarity(matrix, matrix)
+
 
 # Function to get recommendations based on user input
 def get_recommendations(tags, top_n=5):
@@ -31,12 +42,10 @@ def get_recommendations(tags, top_n=5):
 
     indices = [score[0] for score in sim_scores[:top_n]]
     recommendations = [
-        {"courses": df['title'].iloc[i],
+        {"courses": df['Title'].iloc[i],
          "Description": df["Description"].iloc[i],
          "Level": df["Level"].iloc[i],
-         "Duration": df["Duration"].iloc[i],
          "Skills Covered": df['Skills Covered'].iloc[i],
-         "prerequisites": df['prerequisites'].iloc[i],
          "URL": df['URL'].iloc[i]}
         for i in indices
     ]
