@@ -32,7 +32,7 @@ async def get_recommendations(keyword: str, top_n: int = 5):
         recommended_courses = recommend_courses(keyword, similarity_matrix, df, top_n=top_n)
 
         response = {"message": f"Recommendations for {keyword}", "courses": recommended_courses}
-        response.headers["Access-Control-Allow-Origin"] = "*"
+        # response.headers["Access-Control-Allow-Origin"] = "*"
         return response
 
     except Exception as e:
