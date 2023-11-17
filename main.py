@@ -6,7 +6,7 @@ import uvicorn
 
 
 app = FastAPI()
-origins = ["*"]
+origins = ["127.0.0.1","localhost","courseapi-s0hm.onrender.com"]
 
 
 app.add_middleware(
