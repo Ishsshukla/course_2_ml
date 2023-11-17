@@ -45,8 +45,7 @@ def get_recommendations(tags, top_n=5):
         {"courses": df['Title'].iloc[i],
          "Description": df["Description"].iloc[i],
          "Level": df["Level"].iloc[i],
-         "Skills Covered": df['Skills Covered'].iloc[i],
-         "URL": df['URL'].iloc[i]}
+         "Skills Covered": df['Skills Covered'].iloc[i]}
         for i in indices
     ]
     return recommendations
