@@ -7,7 +7,7 @@ import pandas as pd
 app = FastAPI()
 
 # CORS (Cross-Origin Resource Sharing) settings
-origins = ["http://127.0.0.1:8000/", "http://localhost:5173", "https://course2.onrender.com/", "http://localhost:5000"]
+origins = ["http://127.0.0.1:8000/", "http://localhost:5173","https://workshala-navy.vercel.app/", "https://course2.onrender.com/", "http://localhost:5000"]
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 df = pd.read_csv("all_courses.csv")
